@@ -266,21 +266,6 @@ def sample_sim(fusion_emb, xind=None, yind=None):
     return sim_adj
 
 
-def generate_pseudo_labels_percentile(mu_z, cluster_center_z, data, cluster_num, per):
-    _, p, q_z = pq_loss_func(mu_z, cluster_center_z.cuda())
-    cluster_pred_score, pred_labels_z = dist_2_label(q_z)
-    tau_p = np.percentile(cluster_pred_score.detach().cpu().numpy(), per*100)
-    selected_idx_z = cluster_pred_score >= tau_p
-    selected_idx_z = [x for x, y in list(enumerate(selected_idx_z.tolist())) if y == True]
-    selected_idx_z = np.asarray(selected_idx_z, dtype=int)
-    print("The number of pseudo labels:", len(selected_idx_z))
-    pesu_acc, pesu_nmi, pesu_f1, pesu_ari = cluster_accuracy(pred_labels_z[selected_idx_z].cpu(), data.labels[selected_idx_z],
-                                                   cluster_num)
-    print('Pesudo labels accuracy: {:.2f},{:.2f},{:.2f}'.format(pesu_acc * 100, pesu_nmi * 100, pesu_f1 * 100))
-    print("-----------------------------------------------------------------------------")
-    return selected_idx_z, pred_labels_z
-
-
 def set_seed(seed):
     SEED = seed
     random.seed(SEED)
