@@ -27,17 +27,17 @@ parser.add_argument('--encoder', type=str, default="GAT", help='the model name')
 parser.add_argument('--hid_dim', type=int, nargs='+', default=[256, 128, 512])
 parser.add_argument('--lr_pretrain', type=float, default=1e-4, help='Initial learning rate.')
 parser.add_argument('--pretrain_epochs', type=int, default=100, help='Number of pretrained totalssl epochs.')
-parser.add_argument('--w_ssl_stage_one', type=float, default=0.25, help='the ssl_loss weight of pretrain stage one')
+parser.add_argument('--w_ssl_stage_one', type=float, default=1, help='the ssl_loss weight of pretrain stage one')
 parser.add_argument('--use_ckpt', type=int, default=0, help='whether to use checkpoint, 0/1.')
 parser.add_argument('--save_ckpt', type=int, default=1, help='whether to save checkpoint, 0/1.')
 
 parser.add_argument('--top_k', type=int, default=3, help='The number of experts to choose.')
-parser.add_argument('--st_per_p', type=float, default=0.7, help='The threshold of the pseudo positive labels.')
+parser.add_argument('--st_per_p', type=float, default=1, help='The threshold of the pseudo positive labels.')
 parser.add_argument('--lr_train_fusion', type=float, default=1e-3, help='train pseudo labels learning rate.')
 parser.add_argument('--labels_epochs', type=int, default=200, help='Number of epochs to train.')
 
 parser.add_argument('--w_pq', type=float, default=1, help='weight of loss pq.')
-parser.add_argument('--w_ssl_stage_two', type=float, default=0.1, help='the ssl_loss weight of train stage')
+parser.add_argument('--w_ssl_stage_two', type=float, default=1, help='the ssl_loss weight of train stage')
 
 parser.add_argument('--given_cell_type_labels', action='store_true', default=True,
                     help='(boolean, default False) If True, expect a cell type label file and will compute ARI against those labels')
@@ -57,9 +57,9 @@ parser.add_argument('--load_h5', type=str, default=None,
 parser.add_argument('--load_h5_2', type=str, default=None,
                     help='(str, default None) If not None, will load the csv generated from the h5 specified in this file path')
 # Preprocess related
-parser.add_argument('--preprocess_cell_cutoff', type=float, default=0.8,
+parser.add_argument('--preprocess_cell_cutoff', type=float, default=1,
                     help='Not needed if using benchmark')
-parser.add_argument('--preprocess_gene_cutoff', type=float, default=0.8,
+parser.add_argument('--preprocess_gene_cutoff', type=float, default=1,
                     help='Not needed if using benchmark')
 parser.add_argument('--preprocess_top_gene_select', type=int, default=2000,
                     help='Not needed if using benchmark')
@@ -93,11 +93,6 @@ def main():
     args.load_dataset_name = 'Human1'
     args.load_h5_2 = 'Human1.h5'
     args.use_ckpt = 1
-    args.lr_pretrain = 1e-4
-    args.lr_train_fusion = 1e-2
-    args.pretrain_epochs = 100
-    args.labels_epochs = 200
-    args.save_ckpt = 0
 
     torch.cuda.empty_cache()
     torch.cuda.reset_peak_memory_stats()
